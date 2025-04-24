@@ -1,9 +1,10 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import Form from './Screens/Form.tsx'
+import DataObjectPage from './Screens/DataObjectPage.tsx'
+import '../src/Styles/main.css'; // Add this import
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <Form />
-  </StrictMode>,
+    <DataObjectPage />
+  </StrictMode>
 )
