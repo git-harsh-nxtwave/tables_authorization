@@ -1,0 +1,3 @@
+ref: reverse_etl_placement_support_crm_prod.crm_integration_live_xpm_ccbp_users_jobs_with_extra_details
+
+source: live_otg_forms_backend_prod.otg_forms_ibform 

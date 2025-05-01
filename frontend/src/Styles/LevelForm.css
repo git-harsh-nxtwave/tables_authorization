@@ -1,186 +1,233 @@
-/* Form container */
 .level-form-container {
-    background: white;
-    padding: 2.5rem;
-    border-radius: 16px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
-    width: 100%;
-    max-width: 800px;
-    border: 1px solid #eaeaea;
-  }
-  
-  /* Form header */
-  .level-header {
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin-bottom: 2rem;
-    color: #2c3e50;
-    padding-bottom: 0.75rem;
-    border-bottom: 2px solid #f0f4f8;
-  }
-  
-  /* Form groups */
-  .form-group {
-    margin-bottom: 1.75rem;
-  }
-  
-  .form-label {
-    display: block;
-    margin-bottom: 0.75rem;
-    font-weight: 500;
-    color: #4a5568;
-    font-size: 1.05rem;
-  }
-  
-  /* Input fields */
-  .form-input, .form-textarea {
-    width: 100%;
-    padding: 1rem;
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    font-size: 1rem;
-    transition: all 0.2s ease;
-    background-color: #f8fafc;
-  }
-  
-  .form-input:hover, .form-textarea:hover {
-    border-color: #cbd5e0;
-  }
-  
-  .form-input:focus, .form-textarea:focus {
-    outline: none;
-    border-color: #4a90e2;
-    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
-    background-color: white;
-  }
-  
-  /* Textarea specific */
-  .form-textarea {
-    min-height: 150px;
-    resize: vertical;
-    line-height: 1.5;
-  }
-  
-  /* Select dropdown */
-  select.form-input {
-    appearance: none;
-    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-    background-repeat: no-repeat;
-    background-position: right 1rem center;
-    background-size: 1em;
-    padding-right: 2.5rem;
-  }
-  
-  /* Button container */
-  .form-button-container {
-    margin-top: 2.5rem;
-    display: flex;
-    justify-content: flex-end;
-  }
-  
-  /* Form buttons */
-  .form-button {
-    background-color: #4a90e2;
-    color: white;
-    padding: 1rem 2rem;
-    border: none;
-    border-radius: 8px;
-    font-size: 1.05rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    box-shadow: 0 4px 6px rgba(74, 144, 226, 0.2);
-    min-width: 180px;
-    text-align: center;
-  }
-  
-  .form-button:hover {
-    background-color: #3a7bc8;
-    transform: translateY(-1px);
-    box-shadow: 0 6px 8px rgba(74, 144, 226, 0.25);
-  }
-  
-  .form-button:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 4px rgba(74, 144, 226, 0.2);
-  }
-  
-  .form-button:disabled {
-    background-color: #a0aec0;
-    transform: none;
-    box-shadow: none;
-    cursor: not-allowed;
-  }
-  
-  /* Responsive design */
-  @media (max-width: 768px) {
-    .level-form-container {
-      padding: 1.5rem;
-    }
-    
-    .form-button {
-      width: 100%;
-      min-width: auto;
-    }
-  }
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
 
+.level-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
 
-  /* Form Header */
-.form-header-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2rem;
-    padding-bottom: 0.75rem;
-    border-bottom: 2px solid #f0f4f8;
-  }
-  
-  .level-header {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: #2c3e50;
-    margin: 0;
-  }
-  
-  .object-type-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  
-  .object-type-header .form-label {
-    margin: 0;
-    font-weight: 500;
-    color: #4a5568;
-  }
-  
-  /* Compact select style */
-  .compact-select {
-    padding: 0.5rem 2rem 0.5rem 0.75rem;
-    min-width: 120px;
-    background-position: right 0.5rem center;
-    background-size: 0.8em;
-  }
-  
-  .view-label {
-    padding: 0.5rem 0.75rem;
-    background-color: #f0f4f8;
-    border-radius: 6px;
-    font-weight: 500;
-    color: #4a5568;
-  }
-  
-  /* Form groups (adjusted for new layout) */
-  .form-group {
-    margin-bottom: 1.75rem;
-  }
-  
-  .form-label {
-    display: block;
-    margin-bottom: 0.75rem;
-    font-weight: 500;
-    color: #4a5568;
-    font-size: 1.05rem;
-  }
-  
-  /* Rest of your existing form styles... */
+.level-header {
+  margin: 0;
+  font-size: 1.25rem;
+  color: #333;
+  font-weight: 600;
+}
+
+.object-type-badge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.object-type-badge.view {
+  background-color: #e0f7fa;
+  color: #00796b;
+}
+
+.object-type-badge.table {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.compact-fields-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.form-group.compact {
+  flex: 1;
+  min-width: 0;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 0.875rem;
+  color: #555;
+  font-weight: 500;
+}
+
+.form-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  transition: border-color 0.2s;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #4d90fe;
+  box-shadow: 0 0 0 2px rgba(77, 144, 254, 0.2);
+}
+
+select.form-input {
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 16px;
+  padding-right: 32px;
+}
+
+.query-editor-container {
+  margin-top: 8px;
+}
+
+.query-label {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 0.875rem;
+  color: #555;
+  font-weight: 500;
+}
+
+.query-editor {
+  position: relative;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  overflow: hidden;
+  transition: all 0.2s;
+}
+
+.query-editor-container.focused .query-editor {
+  border-color: #4d90fe;
+  box-shadow: 0 0 0 2px rgba(77, 144, 254, 0.2);
+}
+
+.sql-textarea {
+  width: 100%;
+  min-height: 200px;
+  padding: 12px;
+  font-family: 'Fira Code', 'Consolas', 'Monaco', monospace;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: #333;
+  border: none;
+  resize: vertical;
+  background-color: #f8f9fa;
+  tab-size: 2;
+}
+
+.sql-textarea:focus {
+  outline: none;
+  background-color: white;
+}
+
+.query-hint {
+  font-size: 0.75rem;
+  color: #666;
+  margin-top: 4px;
+  font-style: italic;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.form-button {
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.form-button.primary {
+  background-color: #4d90fe;
+  color: white;
+  border: none;
+}
+
+.form-button.primary:hover:not(:disabled) {
+  background-color: #357ae8;
+}
+
+.form-button.primary:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.form-button.secondary {
+  background-color: white;
+  color: #4d90fe;
+  border: 1px solid #4d90fe;
+}
+
+.form-button.secondary:hover:not(:disabled) {
+  background-color: #f5f9ff;
+}
+
+.form-button.secondary:disabled {
+  color: #cccccc;
+  border-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.loading-message, .error-message {
+  font-size: 0.875rem;
+  padding: 8px 0;
+}
+
+.loading-message {
+  color: #666;
+}
+
+.error-message {
+  color: #d32f2f;
+}
+
+.object-type-select {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: 1px solid #ddd;
+  background-color: #f8f9fa;
+  color: #333;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 6px center;
+  background-size: 12px;
+  padding-right: 24px;
+}
+
+.object-type-select:focus {
+  outline: none;
+  border-color: #4d90fe;
+  box-shadow: 0 0 0 2px rgba(77, 144, 254, 0.2);
+}
+
+.object-type-select:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Remove the old badge styles */
+.object-type-badge {
+  display: none;
+}

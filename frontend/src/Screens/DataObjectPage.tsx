@@ -1,17 +1,73 @@
 import { useState, useEffect } from 'react';
 import LevelForm from '../components/LevelForm';
+import ConfirmationDialog from '../components/ConfirmationDialog';
+import SubmissionOverlay from '../components/SubmissionOverlay';
+import DbtComparisonView from './DbtComparisonView';
 import '../Styles/DataObjectPage.css';
 import { LevelData, FormData } from '../types';
 
 const DataObjectPage = () => {
-  const [projectId, setProjectId] = useState<string>('kossip-helpers');
+  // State for project and level management
+  const [projectId, setProjectId] = useState<string>('');
+  const [projectIds, setProjectIds] = useState<string[]>([]);
   const [currentLevel, setCurrentLevel] = useState<number>(1);
   const [formData, setFormData] = useState<FormData>({});
   const [completedLevels, setCompletedLevels] = useState<number[]>([]);
   const [visibleLevels, setVisibleLevels] = useState<number[]>([1]);
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [submitMessage, setSubmitMessage] = useState<string>('');
+  const [isLoadingProjects, setIsLoadingProjects] = useState<boolean>(true);
+  const [projectError, setProjectError] = useState<string>('');
+
+  // State for confirmation dialogs
+  const [showAddConfirmation, setShowAddConfirmation] = useState(false);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [levelToDelete, setLevelToDelete] = useState<number | null>(null);
+  const [pendingLevelData, setPendingLevelData] = useState<{level: number, data: LevelData} | null>(null);
+
+  // State for submission and dbt view
+  const [submissionState, setSubmissionState] = useState<{
+    loading: boolean;
+    success: boolean;
+    error: boolean;
+    dbtModels: Record<string, string>;
+    dbtFilePaths: Record<string, string>;
+  }>({
+    loading: false,
+    success: false,
+    error: false,
+    dbtModels: {},
+    dbtFilePaths: {}
+  });
+  const [showDbtView, setShowDbtView] = useState(false);
+
   const maxLevels = 4;
+
+  // Fetch project IDs from API
+  useEffect(() => {
+    const fetchProjectIds = async () => {
+      try {
+        const response = await fetch('http://127.0.0.1:5000/api/project_ids');
+        if (!response.ok) {
+          throw new Error('Failed to fetch project IDs');
+        }
+        const data = await response.json();
+        if (data.status === 'success' && Array.isArray(data.project_ids)) {
+          setProjectIds(data.project_ids);
+          if (data.project_ids.length > 0) {
+            setProjectId(data.project_ids[0]);
+          }
+        } else {
+          throw new Error('Invalid data format from API');
+        }
+      } catch (error) {
+        console.error('Error fetching project IDs:', error);
+        setProjectError(error instanceof Error ? error.message : 'Failed to load project IDs');
+      } finally {
+        setIsLoadingProjects(false);
+      }
+    };
+
+    fetchProjectIds();
+  }, []);
 
   const getInitialLevelData = (level: number): LevelData => {
     return formData[`level${level}`] || {
@@ -29,6 +85,8 @@ const DataObjectPage = () => {
 
   // Load saved data from localStorage
   useEffect(() => {
+    if (projectIds.length === 0) return;
+
     const savedData = localStorage.getItem('levelFormData');
     if (savedData) {
       try {
@@ -38,7 +96,11 @@ const DataObjectPage = () => {
           completed?: number[];
           visible?: number[];
         };
-        setProjectId(savedProjectId || 'kossip-helpers');
+        
+        if (savedProjectId && projectIds.includes(savedProjectId)) {
+          setProjectId(savedProjectId);
+        }
+        
         if (levels) {
           const validatedLevels = Object.entries(levels).reduce((acc, [key, value]) => {
             acc[key as `level${number}`] = {
@@ -55,7 +117,7 @@ const DataObjectPage = () => {
         console.error('Failed to parse saved data', e);
       }
     }
-  }, []);
+  }, [projectIds]);
 
   // Save data to localStorage
   useEffect(() => {
@@ -83,46 +145,96 @@ const DataObjectPage = () => {
       setCompletedLevels(prev => [...prev, level]);
     }
 
-    // Add message when user completes the last visible level
     if (level === visibleLevels[visibleLevels.length - 1]) {
-      setSubmitMessage('All levels completed! Click "Submit All Levels" to finish.');
+      console.log('All levels completed! Ready to submit.');
     }
+  };
 
-    // Automatically add next level when:
-    // 1. Current level is complete
-    // 2. We haven't reached max levels
-    // 3. This is the latest visible level
-    if (level < maxLevels && level === visibleLevels[visibleLevels.length - 1]) {
+  const handleAddNextLevel = (level: number, data: LevelData) => {
+    setPendingLevelData({ level, data });
+    setShowAddConfirmation(true);
+  };
+
+  const confirmAddLevel = () => {
+    if (!pendingLevelData) return;
+    
+    const { level, data } = pendingLevelData;
+    handleLevelSubmit(level, data);
+    if (level < maxLevels) {
       const nextLevel = level + 1;
       setVisibleLevels(prev => [...prev, nextLevel]);
       setCurrentLevel(nextLevel);
     }
+    
+    setPendingLevelData(null);
+    setShowAddConfirmation(false);
+  };
+
+  const handleDeleteLevelClick = (level: number, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (level <= 1) return;
+    setLevelToDelete(level);
+    setShowDeleteConfirmation(true);
+  };
+
+  const confirmDeleteLevel = () => {
+    if (!levelToDelete) return;
+    
+    setVisibleLevels(prev => prev.filter(l => l !== levelToDelete));
+    setCompletedLevels(prev => prev.filter(l => l !== levelToDelete));
+    const { [`level${levelToDelete}`]: _, ...remainingData } = formData;
+    setFormData(remainingData);
+    
+    if (currentLevel === levelToDelete) {
+      setCurrentLevel(Math.max(1, levelToDelete - 1));
+    }
+    
+    setLevelToDelete(null);
+    setShowDeleteConfirmation(false);
   };
 
   const handleLevelChange = (level: number) => {
     setCurrentLevel(level);
   };
 
-  const addNewLevel = () => {
-    if (visibleLevels.length < maxLevels) {
-      const newLevel = visibleLevels.length + 1;
-      setVisibleLevels(prev => [...prev, newLevel]);
-      setCurrentLevel(newLevel);
-    }
-  };
-
   const handleFinalSubmit = async () => {
+    if (!projectId) {
+      console.log('Please select a project ID');
+      return;
+    }
+
+    setSubmissionState({
+      loading: true,
+      success: false,
+      error: false,
+      dbtModels: {},
+      dbtFilePaths: {}
+    });
+
     const submissionData = {
-      project_id: projectId,
       timestamp: new Date().toISOString(),
-      ...formData
+      data: {
+        project_id: projectId,
+        timestamp: new Date().toISOString(),
+        ...formData
+      }
     };
 
-    setIsSubmitting(true);
-    setSubmitMessage('Submitting data...');
-
     try {
-      const response = await fetch('http://localhost:5000/api/submit', {
+      // Step 1: Submit data to /api/submit
+      const submitResponse = await fetch('http://localhost:5000/api/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(submissionData.data),
+      });
+
+      const submitResult = await submitResponse.json();
+      if (!submitResponse.ok) throw new Error(submitResult.message || 'Failed to submit data');
+
+      // Step 2: Convert to DBT using /api/convert-to-dbt
+      const dbtResponse = await fetch('http://localhost:5000/api/convert-to-dbt', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -130,21 +242,63 @@ const DataObjectPage = () => {
         body: JSON.stringify(submissionData),
       });
 
-      const result = await response.json();
-      
-      if (!response.ok) {
-        throw new Error(result.message || 'Failed to submit data');
-      }
+      const dbtResult = await dbtResponse.json();
+      if (!dbtResponse.ok) throw new Error(dbtResult.message || 'Failed to convert to DBT');
 
-      setSubmitMessage('Data saved successfully!');
-      console.log('Submission result:', result);
+      // Extract DBT models and file paths from the response
+      const dbtModels = Object.fromEntries(
+        Object.entries(dbtResult.comparisons || {}).map(([level, data]: [string, any]) => [
+          level.replace('level', ''),
+          data.dbt_format
+        ])
+      );
+      const dbtFilePaths = Object.fromEntries(
+        Object.entries(dbtResult.comparisons || {}).map(([level, data]: [string, any]) => [
+          level.replace('level', ''),
+          data.dbt_file_path
+        ])
+      );
+
+      setSubmissionState({
+        loading: false,
+        success: true,
+        error: false,
+        dbtModels,
+        dbtFilePaths
+      });
       
     } catch (error) {
-      console.error('Error submitting data:', error);
-      setSubmitMessage(error.message || 'Error saving data. Please try again.');
-    } finally {
-      setIsSubmitting(false);
+      console.error('Error during submission or DBT conversion:', error);
+      setSubmissionState({
+        loading: false,
+        success: false,
+        error: true,
+        dbtModels: {},
+        dbtFilePaths: {}
+      });
     }
+  };
+
+  const handleMakeChanges = () => {
+    setSubmissionState({
+      loading: false,
+      success: false,
+      error: false,
+      dbtModels: {},
+      dbtFilePaths: {}
+    });
+  };
+
+  const handleShowDbt = () => {
+    setShowDbtView(true);
+  };
+
+  const handleSubmitAgain = () => {
+    handleFinalSubmit();
+  };
+
+  const handleCloseDbtView = () => {
+    setShowDbtView(false);
   };
 
   const isLevelComplete = (level: number): boolean => {
@@ -158,6 +312,25 @@ const DataObjectPage = () => {
 
   const allLevelsComplete = visibleLevels.every(level => isLevelComplete(level));
 
+  if (isLoadingProjects) {
+    return (
+      <div className="page-container">
+        <div className="loading-spinner">Loading projects...</div>
+      </div>
+    );
+  }
+
+  if (projectError) {
+    return (
+      <div className="page-container">
+        <div className="error-message">
+          <p>{projectError}</p>
+          <button onClick={() => window.location.reload()}>Retry</button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="page-container">
       <div className="form-layout">
@@ -170,37 +343,52 @@ const DataObjectPage = () => {
               value={projectId}
               onChange={(e) => setProjectId(e.target.value)}
               className="form-input"
+              disabled={projectIds.length === 0}
             >
-              <option value="kossip-helpers">kossip-helpers</option>
-              <option value="kossip-helpers-dev">kossip-helpers-dev</option>
+              {projectIds.map(id => (
+                <option key={id} value={id}>{id}</option>
+              ))}
             </select>
+            {projectIds.length === 0 && (
+              <p className="no-projects-message">No projects available</p>
+            )}
           </div>
 
           <div className="level-nav">
-            {visibleLevels.map(level => (
-              <button
-                key={level}
-                className={`level-nav-button ${currentLevel === level ? 'active' : ''} ${
-                  completedLevels.includes(level) ? 'completed' : ''
-                }`}
-                onClick={() => handleLevelChange(level)}
-              >
-                Level {level}
-                {completedLevels.includes(level) && (
-                  <span className="checkmark">✓</span>
-                )}
-              </button>
-            ))}
-
-            {visibleLevels.length < maxLevels && (
-              <button 
-                className="add-level-button"
-                onClick={addNewLevel}
-                disabled={!isLevelComplete(visibleLevels[visibleLevels.length - 1])}
-              >
-                + Add Level
-              </button>
-            )}
+            {visibleLevels.map(level => {
+              const levelData = formData[`level${level}`];
+              const datasetId = levelData?.dataset_id || 'Not selected';
+              
+              return (
+                <div key={level} className="level-nav-item">
+                  <button
+                    className={`level-nav-button ${currentLevel === level ? 'active' : ''} ${
+                      completedLevels.includes(level) ? 'completed' : ''
+                    }`}
+                    onClick={() => handleLevelChange(level)}
+                  >
+                    <div className="level-nav-content">
+                      <div className="level-number">Level {level}</div>
+                      <div className="level-dataset" title={datasetId}>
+                        {datasetId.length > 15 ? `${datasetId.substring(0, 12)}...` : datasetId}
+                      </div>
+                    </div>
+                    {completedLevels.includes(level) && (
+                      <span className="checkmark">✓</span>
+                    )}
+                  </button>
+                  {level > 1 && (
+                    <button
+                      className="delete-level-button"
+                      onClick={(e) => handleDeleteLevelClick(level, e)}
+                      title="Delete this level"
+                    >
+                      ×
+                    </button>
+                  )}
+                </div>
+              );
+            })}
           </div>
 
           {allLevelsComplete && visibleLevels.length > 0 && (
@@ -208,15 +396,10 @@ const DataObjectPage = () => {
               <button 
                 onClick={handleFinalSubmit}
                 className="form-button submit-all-button"
-                disabled={isSubmitting}
+                disabled={submissionState.loading || !projectId}
               >
-                {isSubmitting ? 'Submitting...' : 'Submit All Levels'}
+                {submissionState.loading ? 'Submitting...' : 'Submit All Levels'}
               </button>
-              {submitMessage && (
-                <div className={`submit-message ${submitMessage.includes('Error') ? 'error' : 'success'}`}>
-                  {submitMessage}
-                </div>
-              )}
             </div>
           )}
         </div>
@@ -228,6 +411,7 @@ const DataObjectPage = () => {
               key={currentLevel}
               level={currentLevel}
               onSubmit={handleLevelSubmit}
+              onAddNextLevel={handleAddNextLevel}
               disabled={!projectId}
               initialData={getInitialLevelData(currentLevel)}
               isLastLevel={currentLevel === visibleLevels[visibleLevels.length - 1]}
@@ -236,6 +420,52 @@ const DataObjectPage = () => {
           )}
         </div>
       </div>
+
+      {/* Confirmation Dialogs */}
+      <ConfirmationDialog
+        isOpen={showAddConfirmation}
+        title="Add New Level"
+        message="Are you sure you want to add another level? This action cannot be undone."
+        onConfirm={confirmAddLevel}
+        onCancel={() => setShowAddConfirmation(false)}
+        confirmText="Add Level"
+        cancelText="Cancel"
+      />
+
+      <ConfirmationDialog
+        isOpen={showDeleteConfirmation}
+        title="Delete Level"
+        message={`Are you sure you want to delete Level ${levelToDelete}? All data for this level will be lost.`}
+        onConfirm={confirmDeleteLevel}
+        onCancel={() => setShowDeleteConfirmation(false)}
+        confirmText="Delete"
+        cancelText="Cancel"
+      />
+
+      {/* Submission Overlay */}
+      <SubmissionOverlay
+        isLoading={submissionState.loading}
+        isSuccess={submissionState.success}
+        isError={submissionState.error}
+        onMakeChanges={handleMakeChanges}
+        onShowDbt={handleShowDbt}
+        onSubmitAgain={handleSubmitAgain}
+      />
+
+      {/* DBT Comparison View */}
+      {showDbtView && (
+        <DbtComparisonView
+          originalSql={Object.fromEntries(
+            Object.entries(formData).map(([key, value]) => [
+              key.replace('level', ''),
+              value.query || ''
+            ])
+          )}
+          dbtModels={submissionState.dbtModels}
+          dbtFilePaths={submissionState.dbtFilePaths}
+          onClose={handleCloseDbtView}
+        />
+      )}
     </div>
   );
 };

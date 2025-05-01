@@ -1,0 +1,337 @@
+.dbt-comparison-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: white;
+    z-index: 1001;
+    padding: 2rem;/* DbtComparisonView.css */
+    .dbt-comparison-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+    
+    .dbt-comparison-container {
+      background: #ffffff;
+      border-radius: 12px;
+      width: 100%;
+      max-width: 900px;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .comparison-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 24px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    
+    .comparison-header h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #1f2937;
+      margin: 0;
+    }
+    
+    .close-button {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: #6b7280;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    
+    .close-button:hover {
+      color: #1f2937;
+    }
+    
+    .comparison-content {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    
+    .level-card {
+      background: #f9fafb;
+      border-radius: 8px;
+      padding: 16px;
+      border: 1px solid #e5e7eb;
+    }
+    
+    .level-card h3 {
+      font-size: 1.25rem;
+      font-weight: 500;
+      color: #1f2937;
+      margin: 0 0 16px;
+    }
+    
+    .code-section {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    
+    .code-block {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    .code-label {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #4b5563;
+      text-transform: uppercase;
+    }
+    
+    .code-pre {
+      background: #1f2937;
+      color: #e5e7eb;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.875rem;
+      padding: 12px;
+      border-radius: 6px;
+      margin: 0;
+      white-space: pre-wrap;
+      word-break: break-word;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    
+    /* Responsive Design */
+    @media (min-width: 768px) {
+      .code-section {
+        flex-direction: row;
+        gap: 24px;
+      }
+    
+      .code-block {
+        flex: 1;
+      }
+    }
+    
+    @media (max-width: 767px) {
+      .dbt-comparison-container {
+        max-height: 90vh;
+        padding: 16px;
+      }
+    
+      .comparison-header {
+        padding: 12px 16px;
+      }
+    
+      .comparison-content {
+        padding: 16px;
+      }
+    
+      .level-card {
+        padding: 12px;
+      }
+    
+      .level-card h3 {
+        font-size: 1.125rem;
+      }
+    }
+    overflow: auto;
+  }
+  
+  .comparison-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+  
+  .close-button {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+  
+  .comparison-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+  
+  .level-comparison {
+    background: #f9f9f9;
+    padding: 1rem;
+    border-radius: 4px;
+  }
+  
+  .code-comparison {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  
+  .code-panel {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 1rem;
+    overflow: auto;
+  }
+  
+  .code-panel h4 {
+    margin-top: 0;
+  }
+  
+  .code-panel pre {
+    white-space: pre-wrap;
+    background: #f5f5f5;
+    padding: 1rem;
+    border-radius: 4px;
+    max-height: 300px;
+    overflow: auto;
+  }
+
+  .dbt-comparison-container {
+    font-family: 'Fira Code', 'Consolas', 'Monaco', 'Courier New', monospace;
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  
+  .comparison-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .comparison-header h2 {
+    font-size: 1.5rem;
+    color: #333;
+    margin: 0;
+  }
+  
+  .close-button {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #666;
+    padding: 0 10px;
+  }
+  
+  .close-button:hover {
+    color: #333;
+  }
+  
+  .comparison-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+  }
+  
+  .level-comparison h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #444;
+    font-size: 1.2rem;
+  }
+  
+  .code-comparison {
+    display: flex;
+    width: 100%;
+    height: 400px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .code-panel {
+    height: 100%;
+    overflow: auto;
+    padding: 15px;
+    box-sizing: border-box;
+    background-color: white;
+  }
+  
+  .original-sql {
+    background-color: #f8f8f8;
+  }
+  
+  .dbt-sql {
+    background-color: #fff;
+  }
+  
+  .code-panel h4 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+    color: #555;
+    font-weight: 600;
+  }
+  
+  .code-panel pre {
+    margin: 0;
+    white-space: pre-wrap;
+    font-family: inherit;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: #333;
+  }
+  
+  .resize-handle {
+    width: 8px;
+    background-color: #e0e0e0;
+    cursor: col-resize;
+    transition: background-color 0.2s;
+  }
+  
+  .resize-handle:hover {
+    background-color: #007bff;
+  }
+  
+  /* Add some syntax highlighting colors */
+  pre {
+    color: #333;
+  }
+  
+  pre .keyword {
+    color: #007bff;
+    font-weight: bold;
+  }
+  
+  pre .string {
+    color: #28a745;
+  }
+  
+  pre .comment {
+    color: #6c757d;
+    font-style: italic;
+  }
+  
+  pre .function {
+    color: #6f42c1;
+  }
+  
+  pre .operator {
+    color: #d63384;
+  }
