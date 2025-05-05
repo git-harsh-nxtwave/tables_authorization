@@ -28,6 +28,7 @@ const DataObjectPage = () => {
     loading: boolean;
     success: boolean;
     error: boolean;
+    errorMessage?: string;
     dbtModels: Record<string, string>;
     dbtFilePaths: Record<string, string>;
   }>({
@@ -198,8 +199,15 @@ const DataObjectPage = () => {
   };
 
   const handleFinalSubmit = async () => {
-    if (!projectId) {
-      console.log('Please select a project ID');
+    if (!projectId || !projectIds.includes(projectId)) {
+      setSubmissionState({
+        loading: false,
+        success: false,
+        error: true,
+        errorMessage: 'Invalid project ID',
+        dbtModels: {},
+        dbtFilePaths: {}
+      });
       return;
     }
 
@@ -273,6 +281,7 @@ const DataObjectPage = () => {
         loading: false,
         success: false,
         error: true,
+        errorMessage: error instanceof Error ? error.message : 'Submission failed',
         dbtModels: {},
         dbtFilePaths: {}
       });
@@ -447,6 +456,7 @@ const DataObjectPage = () => {
         isLoading={submissionState.loading}
         isSuccess={submissionState.success}
         isError={submissionState.error}
+        errorMessage={submissionState.errorMessage}
         onMakeChanges={handleMakeChanges}
         onShowDbt={handleShowDbt}
         onSubmitAgain={handleSubmitAgain}

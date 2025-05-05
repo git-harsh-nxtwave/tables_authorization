@@ -357,5 +357,144 @@
         "query": "SELECT * FROM `abroad_analytics_prod.dfdsgsdg`"
       }
     }
+  },
+  {
+    "timestamp": "2025-05-02T09:17:03.753012",
+    "data": {
+      "project_id": "kossip-hlepers",
+      "timestamp": "2025-05-02T03:47:03.748Z",
+      "level1": {
+        "dataset_id": "abroad_analytics_prod",
+        "object_name": "admission_master_db",
+        "object_type": "VIEW",
+        "query": "SELECT \nABC.*\nFROM live_otg_forms_backend_prod.otg_forms_ibform  as ABC"
+      },
+      "level2": {
+        "dataset_id": "abroad_analytics_prod",
+        "object_name": "admission_master_db",
+        "object_type": "TABLE",
+        "query": "SELECT * FROM reverse_etl_placement_support_crm_prod.crm_integration_live_xpm_ccbp_users_jobs_with_extra_details"
+      }
+    }
+  },
+  {
+    "timestamp": "2025-05-02T10:43:53.234656",
+    "data": {
+      "project_id": "kossip-hlepers",
+      "timestamp": "2025-05-02T05:13:53.229Z",
+      "level1": {
+        "dataset_id": "abroad_analytics_prod",
+        "object_name": "admission_master_db",
+        "object_type": "VIEW",
+        "query": "select * from live_otg_forms_backend_prod.otg_forms_ibform "
+      }
+    }
+  },
+  {
+    "timestamp": "2025-05-02T18:36:25.180338",
+    "data": {
+      "project_id": "kossip-hlepers",
+      "timestamp": "2025-05-02T13:06:25.174Z",
+      "level1": {
+        "dataset_id": "abroad_analytics_prod",
+        "object_name": "admission_master_db",
+        "object_type": "VIEW",
+        "query": "select \n*\nFROM \nreverse_etl_placement_support_crm_prod.crm_integration_live_xpm_ccbp_users_jobs_with_extra_details\n\nLEFT JOIN  live_otg_forms_backend_prod.otg_forms_ibform "
+      },
+      "level2": {
+        "dataset_id": "abroad_analytics_prod",
+        "object_name": "admission_master_db",
+        "object_type": "TABLE",
+        "query": "SELECT * FROM `abroad_analytics_prod.admission_master_db`"
+      }
+    }
+  },
+  {
+    "timestamp": "2025-05-02T18:44:23.013830",
+    "data": {
+      "project_id": "kossip-hlepers",
+      "timestamp": "2025-05-02T13:14:23.008Z",
+      "level1": {
+        "dataset_id": "abroad_analytics_prod",
+        "object_name": "admission_master_db",
+        "object_type": "VIEW",
+        "query": "select * from reverse_etl_placement_support_crm_prod.crm_integration_live_xpm_ccbp_users_jobs_with_extra_details\n\n"
+      },
+      "level2": {
+        "dataset_id": "abroad_analytics_prod",
+        "object_name": "admission_master_db",
+        "object_type": "TABLE",
+        "query": "SELECT * FROM live_otg_forms_backend_prod.otg_forms_ibform "
+      }
+    }
+  },
+  {
+    "timestamp": "2025-05-05T18:01:21.008480",
+    "data": {
+      "project_id": "kossip-hlepers",
+      "timestamp": "2025-05-05T12:31:21.003Z",
+      "level1": {
+        "dataset_id": "central_views",
+        "object_name": "admission_master_db",
+        "object_type": "VIEW",
+        "query": "SELECT \n* \nfrom live_otg_forms_backend_prod.otg_forms_ibform "
+      },
+      "level2": {
+        "dataset_id": "bq_views",
+        "object_name": "admission_master_db",
+        "object_type": "TABLE",
+        "query": "SELECT * FROM `central_views.admission_master_db`"
+      },
+      "level3": {
+        "dataset_id": "bq_views_academy_prod",
+        "object_name": "admission_master_db",
+        "object_type": "TABLE",
+        "query": "SELECT * FROM `bq_views.admission_master_db`"
+      }
+    }
+  },
+  {
+    "timestamp": "2025-05-05T18:02:45.123022",
+    "data": {
+      "project_id": "kossip-hlepers",
+      "timestamp": "2025-05-05T12:32:45.118Z",
+      "level1": {
+        "dataset_id": "central_views",
+        "object_name": "admission_master_db",
+        "object_type": "VIEW",
+        "query": "SELECT \n* \nfrom live_otg_forms_backend_prod.otg_forms_ibform "
+      },
+      "level2": {
+        "dataset_id": "bq_views",
+        "object_name": "admission_master_db",
+        "object_type": "TABLE",
+        "query": "SELECT * FROM `central_views.admission_master_db`"
+      },
+      "level3": {
+        "dataset_id": "bq_views_academy_prod",
+        "object_name": "admission_master_db",
+        "object_type": "TABLE",
+        "query": "SELECT * FROM `bq_views.admission_master_db`"
+      }
+    }
+  },
+  {
+    "timestamp": "2025-05-05T18:04:04.439716",
+    "data": {
+      "project_id": "kossip-hlepers",
+      "timestamp": "2025-05-05T12:34:04.434Z",
+      "level1": {
+        "dataset_id": "central_views",
+        "object_name": "admission_master_db",
+        "object_type": "VIEW",
+        "query": "SELECT \n* \nfrom live_otg_forms_backend_prod.otg_forms_ibform "
+      },
+      "level3": {
+        "dataset_id": "bq_views_academy_prod",
+        "object_name": "admission_master_db",
+        "object_type": "TABLE",
+        "query": "SELECT * FROM `bq_views.admission_master_db`"
+      }
+    }
   }
 ]
